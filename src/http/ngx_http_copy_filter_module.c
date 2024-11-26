@@ -83,7 +83,6 @@ static ngx_int_t
 ngx_http_copy_filter(ngx_http_request_t *r, ngx_chain_t *in)
 {
     ngx_int_t                     rc;
-    ngx_chain_t                  *cl;
     ngx_connection_t             *c;
     ngx_output_chain_ctx_t       *ctx;
     ngx_http_core_loc_conf_t     *clcf;
@@ -133,14 +132,9 @@ ngx_http_copy_filter(ngx_http_request_t *r, ngx_chain_t *in)
             ctx->thread_handler = ngx_http_copy_thread_handler;
         }
 #endif
-    }
 
-    if (!r->request_output) {
-        for (cl = in; cl; cl = cl->next) {
-            if (ngx_buf_size(cl->buf)) {
-                r->request_output = 1;
-                break;
-            }
+        if (in && in->buf && ngx_buf_size(in->buf)) {
+            r->request_output = 1;
         }
     }
 

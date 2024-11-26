@@ -54,7 +54,6 @@
 #define NGX_HTTP_UPSTREAM_IGN_XA_BUFFERING   0x00000080
 #define NGX_HTTP_UPSTREAM_IGN_XA_CHARSET     0x00000100
 #define NGX_HTTP_UPSTREAM_IGN_VARY           0x00000200
-#define NGX_HTTP_UPSTREAM_IGN_AGE            0x00000400
 
 
 typedef struct {
@@ -105,7 +104,12 @@ typedef struct {
 
     unsigned                         backup:1;
 
-    NGX_COMPAT_BEGIN(6)
+#if (NGX_HTTP_UPSTREAM_ZONE)
+    ngx_str_t                        host;
+    ngx_str_t                        service;
+#endif
+
+    NGX_COMPAT_BEGIN(2)
     NGX_COMPAT_END
 } ngx_http_upstream_server_t;
 
@@ -116,6 +120,7 @@ typedef struct {
 #define NGX_HTTP_UPSTREAM_FAIL_TIMEOUT  0x0008
 #define NGX_HTTP_UPSTREAM_DOWN          0x0010
 #define NGX_HTTP_UPSTREAM_BACKUP        0x0020
+#define NGX_HTTP_UPSTREAM_MODIFY        0x0040
 #define NGX_HTTP_UPSTREAM_MAX_CONNS     0x0100
 
 
@@ -134,6 +139,8 @@ struct ngx_http_upstream_srv_conf_s {
 
 #if (NGX_HTTP_UPSTREAM_ZONE)
     ngx_shm_zone_t                  *shm_zone;
+    ngx_resolver_t                  *resolver;
+    ngx_msec_t                       resolver_timeout;
 #endif
 };
 
@@ -157,7 +164,7 @@ typedef struct {
 
     size_t                           send_lowat;
     size_t                           buffer_size;
-    size_t                           limit_rate;
+    ngx_http_complex_value_t        *limit_rate;
 
     size_t                           busy_buffers_size;
     size_t                           max_temp_file_size;
@@ -177,6 +184,7 @@ typedef struct {
     ngx_flag_t                       request_buffering;
     ngx_flag_t                       pass_request_headers;
     ngx_flag_t                       pass_request_body;
+    ngx_flag_t                       pass_trailers;
 
     ngx_flag_t                       ignore_client_abort;
     ngx_flag_t                       intercept_errors;
@@ -225,7 +233,6 @@ typedef struct {
     signed                           store:2;
     unsigned                         intercept_404:1;
     unsigned                         change_buffering:1;
-    unsigned                         pass_trailers:1;
     unsigned                         preserve_output:1;
 
 #if (NGX_HTTP_SSL || NGX_COMPAT)
@@ -288,17 +295,14 @@ typedef struct {
 
     ngx_table_elt_t                 *cache_control;
     ngx_table_elt_t                 *set_cookie;
-    ngx_table_elt_t                 *age;
 
     off_t                            content_length_n;
     time_t                           last_modified_time;
-    time_t                           age_n;
 
     unsigned                         connection_close:1;
     unsigned                         chunked:1;
     unsigned                         no_cache:1;
     unsigned                         expired:1;
-    unsigned                         max_age:1;
 } ngx_http_upstream_headers_in_t;
 
 

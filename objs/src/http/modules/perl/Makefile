@@ -64,11 +64,11 @@ DIRFILESEP = /
 DFSEP = $(DIRFILESEP)
 NAME = nginx
 NAME_SYM = nginx
-VERSION = 1.27.4
+VERSION = 1.27.3
 VERSION_MACRO = VERSION
-VERSION_SYM = 1_27_4
+VERSION_SYM = 1_27_3
 DEFINE_VERSION = -D$(VERSION_MACRO)=\"$(VERSION)\"
-XS_VERSION = 1.27.4
+XS_VERSION = 1.27.3
 XS_VERSION_MACRO = XS_VERSION
 XS_DEFINE_VERSION = -D$(XS_VERSION_MACRO)=\"$(XS_VERSION)\"
 INST_ARCHLIB = blib/arch
@@ -217,7 +217,7 @@ XSUBPP = "$(XSUBPPDIR)$(DFSEP)xsubpp"
 XSUBPPRUN = $(PERLRUN) $(XSUBPP)
 XSPROTOARG = 
 XSUBPPDEPS = /usr/share/perl/5.40/ExtUtils/typemap typemap /usr/share/perl/5.40/ExtUtils$(DFSEP)xsubpp
-XSUBPPARGS = -typemap '/usr/share/perl/5.40/ExtUtils/typemap' -typemap '/root/freenginx-1.27.4/objs/src/http/modules/perl/typemap'
+XSUBPPARGS = -typemap '/usr/share/perl/5.40/ExtUtils/typemap' -typemap '/root/nginx/objs/src/http/modules/perl/typemap'
 XSUBPP_EXTRA_ARGS =
 
 
@@ -274,7 +274,7 @@ RCS_LABEL = rcs -Nv$(VERSION_SYM): -q
 DIST_CP = best
 DIST_DEFAULT = tardist
 DISTNAME = nginx
-DISTVNAME = nginx-1.27.4
+DISTVNAME = nginx-1.27.3
 
 
 # --- MakeMaker macro section:
@@ -603,7 +603,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '    - t' >> META_new.yml
 	$(NOECHO) $(ECHO) '    - inc' >> META_new.yml
 	$(NOECHO) $(ECHO) 'requires: {}' >> META_new.yml
-	$(NOECHO) $(ECHO) 'version: v1.27.4' >> META_new.yml
+	$(NOECHO) $(ECHO) 'version: v1.27.3' >> META_new.yml
 	$(NOECHO) $(ECHO) 'x_serialization_backend: '\''CPAN::Meta::YAML version 0.018'\''' >> META_new.yml
 	-$(NOECHO) $(MV) META_new.yml $(DISTVNAME)/META.yml
 	$(NOECHO) $(ECHO) Generating META.json
@@ -644,7 +644,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '      }' >> META_new.json
 	$(NOECHO) $(ECHO) '   },' >> META_new.json
 	$(NOECHO) $(ECHO) '   "release_status" : "stable",' >> META_new.json
-	$(NOECHO) $(ECHO) '   "version" : "v1.27.4",' >> META_new.json
+	$(NOECHO) $(ECHO) '   "version" : "v1.27.3",' >> META_new.json
 	$(NOECHO) $(ECHO) '   "x_serialization_backend" : "JSON::PP version 4.16"' >> META_new.json
 	$(NOECHO) $(ECHO) '}' >> META_new.json
 	-$(NOECHO) $(MV) META_new.json $(DISTVNAME)/META.json
@@ -1019,7 +1019,7 @@ testdb_static test_static :: subdirs-test_static
 # --- MakeMaker ppd section:
 # Creates a PPD (Perl Package Description) for a binary distribution.
 ppd :
-	$(NOECHO) $(ECHO) '<SOFTPKG NAME="nginx" VERSION="1.27.4">' > nginx.ppd
+	$(NOECHO) $(ECHO) '<SOFTPKG NAME="nginx" VERSION="1.27.3">' > nginx.ppd
 	$(NOECHO) $(ECHO) '    <ABSTRACT>Perl interface to the nginx HTTP server API</ABSTRACT>' >> nginx.ppd
 	$(NOECHO) $(ECHO) '    <AUTHOR>Igor Sysoev</AUTHOR>' >> nginx.ppd
 	$(NOECHO) $(ECHO) '    <IMPLEMENTATION>' >> nginx.ppd

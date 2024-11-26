@@ -30,9 +30,6 @@ ngx_mail_pop3_parse_command(ngx_mail_session_t *s)
 
     state = s->state;
 
-    ngx_log_debug1(NGX_LOG_DEBUG_MAIL, s->connection->log, 0,
-                   "pop3 parse: %d", state);
-
     for (p = s->buffer->pos; p < s->buffer->last; p++) {
         ch = *p;
 
@@ -250,9 +247,6 @@ ngx_mail_imap_parse_command(ngx_mail_session_t *s)
     } state;
 
     state = s->state;
-
-    ngx_log_debug1(NGX_LOG_DEBUG_MAIL, s->connection->log, 0,
-                   "imap parse: %d", state);
 
     for (p = s->buffer->pos; p < s->buffer->last; p++) {
         ch = *p;
@@ -698,9 +692,6 @@ ngx_mail_smtp_parse_command(ngx_mail_session_t *s)
 
     state = s->state;
 
-    ngx_log_debug1(NGX_LOG_DEBUG_MAIL, s->connection->log, 0,
-                   "smtp parse: %d", state);
-
     for (p = s->buffer->pos; p < s->buffer->last; p++) {
         ch = *p;
 
@@ -943,25 +934,13 @@ ngx_mail_auth_parse(ngx_mail_session_t *s, ngx_connection_t *c)
 
         if (ngx_strncasecmp(arg[0].data, (u_char *) "PLAIN", 5) == 0) {
 
-            if (s->args.nelts == 1 || s->args.nelts == 2) {
+            if (s->args.nelts == 1) {
                 return NGX_MAIL_AUTH_PLAIN;
             }
 
-            return NGX_MAIL_PARSE_INVALID_COMMAND;
-        }
-
-        return NGX_MAIL_PARSE_INVALID_COMMAND;
-    }
-
-    if (arg[0].len == 7) {
-
-        if (ngx_strncasecmp(arg[0].data, (u_char *) "XOAUTH2", 7) == 0) {
-
-            if (s->args.nelts == 1 || s->args.nelts == 2) {
-                return NGX_MAIL_AUTH_XOAUTH2;
+            if (s->args.nelts == 2) {
+                return ngx_mail_auth_plain(s, c, 1);
             }
-
-            return NGX_MAIL_PARSE_INVALID_COMMAND;
         }
 
         return NGX_MAIL_PARSE_INVALID_COMMAND;
@@ -980,25 +959,13 @@ ngx_mail_auth_parse(ngx_mail_session_t *s, ngx_connection_t *c)
 
         if (ngx_strncasecmp(arg[0].data, (u_char *) "EXTERNAL", 8) == 0) {
 
-            if (s->args.nelts == 1 || s->args.nelts == 2) {
+            if (s->args.nelts == 1) {
                 return NGX_MAIL_AUTH_EXTERNAL;
             }
 
-            return NGX_MAIL_PARSE_INVALID_COMMAND;
-        }
-
-        return NGX_MAIL_PARSE_INVALID_COMMAND;
-    }
-
-    if (arg[0].len == 11) {
-
-        if (ngx_strncasecmp(arg[0].data, (u_char *) "OAUTHBEARER", 11) == 0) {
-
-            if (s->args.nelts == 1 || s->args.nelts == 2) {
-                return NGX_MAIL_AUTH_OAUTHBEARER;
+            if (s->args.nelts == 2) {
+                return ngx_mail_auth_external(s, c, 1);
             }
-
-            return NGX_MAIL_PARSE_INVALID_COMMAND;
         }
 
         return NGX_MAIL_PARSE_INVALID_COMMAND;

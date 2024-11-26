@@ -68,9 +68,11 @@ if [ $PCRE != NONE ]; then
 
 else
 
-    PCRE=NO
+    if [ "$NGX_PLATFORM" != win32 ]; then
+        PCRE=NO
+    fi
 
-    if [ $PCRE2 != DISABLED ]; then
+    if [ $PCRE = NO -a $PCRE2 != DISABLED ]; then
 
         ngx_feature="PCRE2 library"
         ngx_feature_name="NGX_PCRE2"
@@ -175,6 +177,22 @@ else
                 ngx_feature_libs="-R/opt/local/lib -L/opt/local/lib -lpcre"
             else
                 ngx_feature_libs="-L/opt/local/lib -lpcre"
+            fi
+
+            . auto/feature
+        fi
+
+        if [ $ngx_found = no ]; then
+
+            # Homebrew on Apple Silicon
+
+            ngx_feature="PCRE library in /opt/homebrew/"
+            ngx_feature_path="/opt/homebrew/include"
+
+            if [ $NGX_RPATH = YES ]; then
+                ngx_feature_libs="-R/opt/homebrew/lib -L/opt/homebrew/lib -lpcre"
+            else
+                ngx_feature_libs="-L/opt/homebrew/lib -lpcre"
             fi
 
             . auto/feature

@@ -277,6 +277,7 @@ objs/nginx:	objs/src/core/nginx.o \
 	objs/src/os/unix/ngx_thread_mutex.o \
 	objs/src/os/unix/ngx_thread_id.o \
 	objs/src/event/ngx_event_openssl.o \
+	objs/src/event/ngx_event_openssl_cache.o \
 	objs/src/event/ngx_event_openssl_stapling.o \
 	objs/src/event/quic/ngx_event_quic.o \
 	objs/src/event/quic/ngx_event_quic_udp.o \
@@ -413,6 +414,7 @@ objs/nginx:	objs/src/core/nginx.o \
 	objs/src/stream/ngx_stream_map_module.o \
 	objs/src/stream/ngx_stream_split_clients_module.o \
 	objs/src/stream/ngx_stream_return_module.o \
+	objs/src/stream/ngx_stream_pass_module.o \
 	objs/src/stream/ngx_stream_set_module.o \
 	objs/src/stream/ngx_stream_upstream_hash_module.o \
 	objs/src/stream/ngx_stream_upstream_least_conn_module.o \
@@ -496,6 +498,7 @@ objs/nginx:	objs/src/core/nginx.o \
 	objs/src/os/unix/ngx_thread_mutex.o \
 	objs/src/os/unix/ngx_thread_id.o \
 	objs/src/event/ngx_event_openssl.o \
+	objs/src/event/ngx_event_openssl_cache.o \
 	objs/src/event/ngx_event_openssl_stapling.o \
 	objs/src/event/quic/ngx_event_quic.o \
 	objs/src/event/quic/ngx_event_quic_udp.o \
@@ -632,6 +635,7 @@ objs/nginx:	objs/src/core/nginx.o \
 	objs/src/stream/ngx_stream_map_module.o \
 	objs/src/stream/ngx_stream_split_clients_module.o \
 	objs/src/stream/ngx_stream_return_module.o \
+	objs/src/stream/ngx_stream_pass_module.o \
 	objs/src/stream/ngx_stream_set_module.o \
 	objs/src/stream/ngx_stream_upstream_hash_module.o \
 	objs/src/stream/ngx_stream_upstream_least_conn_module.o \
@@ -1170,6 +1174,13 @@ objs/src/event/ngx_event_openssl.o:	$(CORE_DEPS) \
 	$(CC) -c $(CFLAGS) $(CORE_INCS) \
 		-o objs/src/event/ngx_event_openssl.o \
 		src/event/ngx_event_openssl.c
+
+
+objs/src/event/ngx_event_openssl_cache.o:	$(CORE_DEPS) \
+	src/event/ngx_event_openssl_cache.c
+	$(CC) -c $(CFLAGS) $(CORE_INCS) \
+		-o objs/src/event/ngx_event_openssl_cache.o \
+		src/event/ngx_event_openssl_cache.c
 
 
 objs/src/event/ngx_event_openssl_stapling.o:	$(CORE_DEPS) \
@@ -2122,6 +2133,13 @@ objs/src/stream/ngx_stream_return_module.o:	$(CORE_DEPS) $(STREAM_DEPS) \
 	$(CC) -c $(CFLAGS) $(CORE_INCS) $(STREAM_INCS) \
 		-o objs/src/stream/ngx_stream_return_module.o \
 		src/stream/ngx_stream_return_module.c
+
+
+objs/src/stream/ngx_stream_pass_module.o:	$(CORE_DEPS) $(STREAM_DEPS) \
+	src/stream/ngx_stream_pass_module.c
+	$(CC) -c $(CFLAGS) $(CORE_INCS) $(STREAM_INCS) \
+		-o objs/src/stream/ngx_stream_pass_module.o \
+		src/stream/ngx_stream_pass_module.c
 
 
 objs/src/stream/ngx_stream_set_module.o:	$(CORE_DEPS) $(STREAM_DEPS) \
@@ -4700,7 +4718,7 @@ objs/addon/src/ngx_http_srcache_headers.o:	$(ADDON_DEPS) \
 ../openssl-3.4.0/.openssl/include/openssl/ssl.h:	objs/Makefile
 	cd ../openssl-3.4.0 \
 	&& if [ -f Makefile ]; then $(MAKE) clean; fi \
-	&& ./config --prefix=/root/freenginx-1.27.4/../openssl-3.4.0/.openssl no-shared no-threads -O3 -ffast-math -march=native -flto=full -Wno-error=nan-infinity-disabled -Werror=implicit-function-declaration -funsafe-math-optimizations --param=ssp-buffer-size=4 -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -Wdate-time -Wp,-D_FORTIFY_SOURCE=2 -fPIC no-tests enable-ktls \
+	&& ./config --prefix=/root/nginx/../openssl-3.4.0/.openssl no-shared no-threads -O3 -ffast-math -march=native -flto=full -Wno-error=nan-infinity-disabled -Werror=implicit-function-declaration -funsafe-math-optimizations --param=ssp-buffer-size=4 -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -Wdate-time -Wp,-D_FORTIFY_SOURCE=2 -fPIC no-tests enable-ktls \
 	&& $(MAKE) \
 	&& $(MAKE) install_sw LIBDIR=lib
 
@@ -4749,12 +4767,12 @@ install_perl_modules:
 
 manpage:	objs/nginx.8
 
-objs/nginx.8:	man/nginx.8 objs/ngx_auto_config.h
+objs/nginx.8:	docs/man/nginx.8 objs/ngx_auto_config.h
 	sed -e "s|%%PREFIX%%|/www/nginx|" \
 		-e "s|%%PID_PATH%%|/var/run/nginx.pid|" \
 		-e "s|%%CONF_PATH%%|/www/nginx/conf/nginx.conf|" \
 		-e "s|%%ERROR_LOG_PATH%%|/www/nginx/log/error.log|" \
-		< man/nginx.8 > $@
+		< docs/man/nginx.8 > $@
 
 install:	build install_perl_modules
 	test -d '$(DESTDIR)/www/nginx' || mkdir -p '$(DESTDIR)/www/nginx'
@@ -4807,7 +4825,7 @@ install:	build install_perl_modules
 		|| mkdir -p '$(DESTDIR)/www/nginx/log'
 
 	test -d '$(DESTDIR)/www/nginx/html' \
-		|| cp -R html '$(DESTDIR)/www/nginx'
+		|| cp -R docs/html '$(DESTDIR)/www/nginx'
 
 	test -d '$(DESTDIR)/www/nginx/log' \
 		|| mkdir -p '$(DESTDIR)/www/nginx/log'

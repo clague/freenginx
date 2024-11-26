@@ -85,7 +85,6 @@
 
 #if (NGX_HAVE_KQUEUE)
 #include <sys/event.h>
-#define NGX_KQUEUE_UDATA_T  (void *)
 #endif
 
 
@@ -104,7 +103,7 @@ typedef struct aiocb  ngx_aiocb_t;
 #define NGX_LISTEN_BACKLOG        -1
 
 
-#ifdef __DragonFly__
+#if (defined __DragonFly__ && __DragonFly_version < 500702)
 #define NGX_KEEPALIVE_FACTOR      1000
 #endif
 

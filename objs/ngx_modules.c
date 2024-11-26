@@ -8,6 +8,7 @@ extern ngx_module_t  ngx_core_module;
 extern ngx_module_t  ngx_errlog_module;
 extern ngx_module_t  ngx_conf_module;
 extern ngx_module_t  ngx_openssl_module;
+extern ngx_module_t  ngx_openssl_cache_module;
 extern ngx_module_t  ngx_quic_module;
 extern ngx_module_t  ngx_quic_bpf_module;
 extern ngx_module_t  ngx_regex_module;
@@ -106,6 +107,7 @@ extern ngx_module_t  ngx_stream_geoip_module;
 extern ngx_module_t  ngx_stream_map_module;
 extern ngx_module_t  ngx_stream_split_clients_module;
 extern ngx_module_t  ngx_stream_return_module;
+extern ngx_module_t  ngx_stream_pass_module;
 extern ngx_module_t  ngx_stream_set_module;
 extern ngx_module_t  ngx_stream_upstream_hash_module;
 extern ngx_module_t  ngx_stream_upstream_least_conn_module;
@@ -118,6 +120,7 @@ ngx_module_t *ngx_modules[] = {
     &ngx_errlog_module,
     &ngx_conf_module,
     &ngx_openssl_module,
+    &ngx_openssl_cache_module,
     &ngx_quic_module,
     &ngx_quic_bpf_module,
     &ngx_regex_module,
@@ -216,6 +219,7 @@ ngx_module_t *ngx_modules[] = {
     &ngx_stream_map_module,
     &ngx_stream_split_clients_module,
     &ngx_stream_return_module,
+    &ngx_stream_pass_module,
     &ngx_stream_set_module,
     &ngx_stream_upstream_hash_module,
     &ngx_stream_upstream_least_conn_module,
@@ -230,6 +234,7 @@ char *ngx_module_names[] = {
     "ngx_errlog_module",
     "ngx_conf_module",
     "ngx_openssl_module",
+    "ngx_openssl_cache_module",
     "ngx_quic_module",
     "ngx_quic_bpf_module",
     "ngx_regex_module",
@@ -328,6 +333,7 @@ char *ngx_module_names[] = {
     "ngx_stream_map_module",
     "ngx_stream_split_clients_module",
     "ngx_stream_return_module",
+    "ngx_stream_pass_module",
     "ngx_stream_set_module",
     "ngx_stream_upstream_hash_module",
     "ngx_stream_upstream_least_conn_module",

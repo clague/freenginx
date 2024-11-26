@@ -47,7 +47,7 @@
 /* GCC MinGW-w64 supports _FILE_OFFSET_BITS */
 #define _FILE_OFFSET_BITS 64
 
-#elif defined __MINGW32__
+#elif defined __GNUC__
 
 /* GCC MinGW's stdio.h includes sys/types.h */
 #define _OFF_T_
@@ -58,7 +58,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#ifdef __MINGW32__
+#ifdef __GNUC__
 #include <stdint.h>
 #endif
 #include <ctype.h>
@@ -198,7 +198,7 @@ typedef unsigned int        ino_t;
 #endif
 
 
-#ifndef __MINGW32__
+#ifndef __GNUC__
 #ifdef _WIN64
 typedef __int64             ssize_t;
 #else

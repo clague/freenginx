@@ -126,9 +126,7 @@ static ngx_int_t ngx_http_charset_postconfiguration(ngx_conf_t *cf);
 static ngx_str_t  ngx_http_charset_default_types[] = {
     ngx_string("text/html"),
     ngx_string("text/xml"),
-    ngx_string("text/javascript"),
     ngx_string("text/plain"),
-    ngx_string("text/markdown"),
     ngx_string("text/vnd.wap.wml"),
     ngx_string("application/javascript"),
     ngx_string("application/rss+xml"),
@@ -440,7 +438,6 @@ ngx_http_source_charset(ngx_http_request_t *r, ngx_str_t *name)
 
     if (charset == NGX_HTTP_CHARSET_OFF) {
         name->len = 0;
-        name->data = NULL;
         return charset;
     }
 

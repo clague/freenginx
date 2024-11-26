@@ -619,10 +619,9 @@ ngx_reap_children(ngx_cycle_t *cycle)
                 ccf = (ngx_core_conf_t *) ngx_get_conf(cycle->conf_ctx,
                                                        ngx_core_module);
 
-                if (ccf->pid.len
-                    && ngx_rename_file((char *) ccf->oldpid.data,
-                                       (char *) ccf->pid.data)
-                       == NGX_FILE_ERROR)
+                if (ngx_rename_file((char *) ccf->oldpid.data,
+                                    (char *) ccf->pid.data)
+                    == NGX_FILE_ERROR)
                 {
                     ngx_log_error(NGX_LOG_ALERT, cycle->log, ngx_errno,
                                   ngx_rename_file_n " %s back to %s failed "

@@ -1231,7 +1231,7 @@ ngx_http_grpc_body_output_filter(void *data, ngx_chain_t *in)
     ngx_buf_t              *b;
     ngx_int_t               rc;
     ngx_uint_t              next, last;
-    ngx_chain_t            *cl, *out, **ll;
+    ngx_chain_t            *cl, *out, *ln, **ll;
     ngx_http_upstream_t    *u;
     ngx_http_grpc_ctx_t    *ctx;
     ngx_http_grpc_frame_t  *f;
@@ -1459,7 +1459,10 @@ ngx_http_grpc_body_output_filter(void *data, ngx_chain_t *in)
             last = 1;
         }
 
+        ln = in;
         in = in->next;
+
+        ngx_free_chain(r->pool, ln);
     }
 
     ctx->in = in;
@@ -4473,9 +4476,7 @@ ngx_http_grpc_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child)
                               prev->upstream.ssl_session_reuse, 1);
 
     ngx_conf_merge_bitmask_value(conf->ssl_protocols, prev->ssl_protocols,
-                                 (NGX_CONF_BITMASK_SET
-                                  |NGX_SSL_TLSv1|NGX_SSL_TLSv1_1
-                                  |NGX_SSL_TLSv1_2|NGX_SSL_TLSv1_3));
+                              (NGX_CONF_BITMASK_SET|NGX_SSL_DEFAULT_PROTOCOLS));
 
     ngx_conf_merge_str_value(conf->ssl_ciphers, prev->ssl_ciphers,
                              "DEFAULT");
@@ -4677,7 +4678,7 @@ ngx_http_grpc_init_headers(ngx_conf_t *cf, ngx_http_grpc_loc_conf_t *conf,
             return NGX_ERROR;
         }
 
-        copy->code = (ngx_http_script_code_pt) (uintptr_t)
+        copy->code = (ngx_http_script_code_pt) (void *)
                                                  ngx_http_script_copy_len_code;
         copy->len = src[i].key.len;
 
